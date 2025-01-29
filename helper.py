@@ -37,8 +37,23 @@ lavirra fo ytilibaborP yad eht fo emiT
 % 49.0 0042 - 0032
 """
 
-arrival_probabilities = [float(x[::-1].split()[3]) for x in arrival_probabilities_raw.splitlines()[2:]]
-
+# parse into lines and words
+pr_arrivals = [(x[::-1].split()[3]) for x in arrival_probabilities_raw.splitlines()[2:]]
 charging_needs = [x[::-1].split() for x in charging_needs_raw.splitlines()[1:]]
-charging_needs[0][2] = "0"
-charging_needs = [(float(x[0]), int(float(x[2]))) for x in charging_needs]
+
+charging_needs[0][2] = "0.0"
+
+pr_charging_needs =  [x[0] for x in charging_needs]
+val_charging_needs = [x[2][:len(x[2])-2] for x in charging_needs]
+
+def as_c_array(li):
+    return '{\n'+ ', \n'.join(li) +'}'
+
+lengthcn = len(val_charging_needs)
+assert(lengthcn == len(pr_charging_needs))
+
+with open('pr_data.c', 'w') as f:
+    f.write("double pr_arrivals[24]" + ' = ' + as_c_array(pr_arrivals) + ';\n')
+    f.write(f"double pr_charging_needs[{lengthcn}]" + ' = ' + as_c_array(pr_charging_needs) + ';\n')
+    f.write(f"unsigned val_charging_needs[{lengthcn}]" + ' = ' + as_c_array(val_charging_needs) + ';\n')
+    f.write(f"size_t len_charging_needs = {lengthcn};\n")
