@@ -1,0 +1,49 @@
+{% from "macros.html" import render_field %}
+<title>EV Parking Simulation</title>
+        	 	<link rel="stylesheet" media="screen" href="static/bootstrap.min.css">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="container">
+    <h2>EV Parking Simulation</h2>
+    <form action="" method="post" role="form">
+        {{ form.csrf_token }}
+        {{ render_field(form.tag) }}
+        {{ render_field(form.arrival_pr_mult) }}
+        {{ render_field(form.car_efficiency) }}
+        {{ render_field(form.charging_power) }}
+        {{ render_field(form.charging_station_count) }}
+        {{ render_field(form.charging_speed) }}
+        {{ render_field(form.ticks_per_hour) }}
+        {{ render_field(form.simulation_duration) }}
+        {{ render_field(form.random_seed) }}
+        
+        <button type="submit" class="btn btn-success">Run Simulation</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+
+        {% for message in messages %}
+        
+        <div class="alert alert-info">
+                    <strong>Success! </strong></div>
+
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% if showres == 1 %}
+    <p>
+    Results for a default simulation of {{ count }} parking spaces that charge at a rate of {{ charge_rate }}kW each.
+    The most EVs parked at once was: _.
+    This corresponds to a power demand of: _kW (should be between 77-121).
+    The theoretical maximum power demand is: _kW.
+    This corresponds to a concurrency factor of: _ (should be between 35-55percent).
+    The total amount charged was: _km.
+    With a fuel efficiency of {{ efficiency }}kWh/100km, this totals to: {{ total_power_consumed }}kWh.
+    In total: {{ parking_events }} EVs parked there in a timespan of _ days.
+    Given the probability data, we expect a car to have to charge: _km.
+        Multiply this by the number of cars parked, and the result: _km.
+        should be around _km.
+    In total, charging stations where occupied about: _% of the simulation.
+    </p>
+    <img src="{{ image }}" alt="Please fill out the fields.">
+    {% endif %}
+</div>

@@ -25,7 +25,6 @@ typedef struct outputs
 
 } Outputs;
 
-
 Outputs process_results(Result*res, unsigned* charging_speeds, unsigned* parking_spots, unsigned categories){
     Outputs outs;
 
